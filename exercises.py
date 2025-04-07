@@ -17,6 +17,14 @@ class Game:
 
     def play_game(self):
         print("Welcome to Py-Pac-Poe! Let's play Tic-Tac-Toe.")
+        while not self.winner and not self.tie:
+            self.render()
+            self.get_move()
+            self.check_for_winner()
+            self.check_for_tie()
+            if not self.winner and not self.tie:
+                self.switch_turn()
+        self.render()
 
     def print_board(self):
         b = self.board
@@ -51,6 +59,31 @@ class Game:
                 break
             else:
                 print("Invalid move. Try again.")
+
+    def check_for_winner(self):
+        b = self.board
+        win_combinations = [
+            ('a1', 'b1', 'c1'),  # Top row
+            ('a2', 'b2', 'c2'),  # Middle row
+            ('a3', 'b3', 'c3'),  # Bottom row
+            ('a1', 'a2', 'a3'),  # Left column
+            ('b1', 'b2', 'b3'),  # Middle column
+            ('c1', 'c2', 'c3'),  # Right column
+            ('a1', 'b2', 'c3'),  # Diagonal TL-BR
+            ('a3', 'b2', 'c1'),  # Diagonal BL-TR
+        ]
+
+        for combo in win_combinations:
+            if b[combo[0]] and b[combo[0]] == b[combo[1]] == b[combo[2]]:
+                self.winner = b[combo[0]]
+                break
+
+    def check_for_tie(self):
+        if all(space is not None for space in self.board.values()) and self.winner is None:
+            self.tie = True
+            
+    def switch_turn(self):
+        self.turn = "O" if self.turn == "X" else "X"
 
 
 if __name__ == "__main__":
